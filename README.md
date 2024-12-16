@@ -8,7 +8,7 @@
 
 ### Rationale behind key technical decisions.
 ## Framework
-- The tech stack I used was Django + SQLite because I use this framework more these days so I can lay out a project quickly. Django offers way more features that are needed for this project but regardless Django covers the needs nicely.
+- The tech stack I used was Django (+ SQLite) because I use this framework usually these days and I can lay out a project quickly. Django offers way more features that are needed for this project but regardless Django covers the needs nicely.
 - FastAPI would have been a good option too.
 - I split the project in two Django apps: content_files and jobs. Those two fit well with the two main resources or domain models that the test talks about which are files submitted and summarized, and summarization jobs.
 
