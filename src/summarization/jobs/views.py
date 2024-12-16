@@ -3,11 +3,12 @@ from uuid import UUID
 
 import structlog
 from django.http import Http404
-from rest_framework.generics import get_object_or_404
 from rest_framework import mixins
+from rest_framework import viewsets
+from rest_framework.generics import get_object_or_404
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework import viewsets
 
 from summarization.jobs.models import SummarizationJob
 from summarization.jobs.serializers import JobsSerializer, JobSummarizedContentSerializer
@@ -17,15 +18,22 @@ logger = structlog.get_logger(__name__)
 
 class JobsViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = JobsSerializer
+    pagination_class = PageNumberPagination
 
     def get_queryset(self):
         return SummarizationJob.objects
 
     def list(self, request: Request) -> Response:
         try:
-            serializer = self.get_serializer(data=self.get_queryset(), many=True)
-            serializer.is_valid()
-            return Response(serializer.data, status=HTTPStatus.OK)
+            queryset = SummarizationJob.objects.all()
+            page = self.paginate_queryset(queryset)
+
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
         except Exception as e:
             logger.error("Unexpected error while listing jobs", exc_info=e)
             return Response(

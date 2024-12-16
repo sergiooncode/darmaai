@@ -39,4 +39,4 @@ logs:
 
 .PHONY: test
 test:
-	$(COMPOSE_CMD) run --rm summarization-server sh -c "pytest -sk /opt/darmaai/src/tests/"
+	$(COMPOSE_CMD) run --rm summarization-server sh -c "pytest /opt/darmaai/src/tests"

@@ -12,6 +12,9 @@
 - FastAPI would have been a good option too.
 - I split the project in two Django apps: content_files and jobs. Those two fit well with the two main resources or domain models that the test talks about which are files submitted and summarized, and summarization jobs.
 
+## Asynchronous job processing
+- I used a well known distributed queue like Celery to defer the jobs of summarizing files.
+
 ## DB schema
 - I considered 3 models: SubmittedContentFile, ProcessedContentFile and SummarizationJob. The first two store in DB the metadata of the file submitted and processed, and the third one stores the job status and references through FKs to the submitted and processed file DB instances.
 
@@ -28,7 +31,7 @@
   /api/jobs/<job_id>/summarized-content/
 
   - List all jobs:
-  /api/jobs/
+  /api/jobs/ (paginated)
 
 ## Database
 - I went with SQLite because it's works pretty much out of the box with Django and no additional Docker container is needed. Just it useful to add sqlite tooling to access DB shell when debugging. Of course SQLite won't be a good option for DB in production.
