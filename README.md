@@ -42,8 +42,9 @@
 ## Future directions
 - The local file system was used to store the fiels but S3 should be considered moving forward.
 
-## Additional notes
+## Additional implementation notes
 - There is a bit of ambiguity with the concepts of summarized and processed in some parts of the projects but it was non-intentional. I thought of generalizing the summarization to processing since with an LLM we are processing text (even a prompt with no input file can be considered processing) but I didn't completely follow through. This should be fixed to avoid confusion in the project moving forward.
+- More tests need to be added.
 
 ### Build and run the Docker image.
 - The docker container is built and run using `make recreate`. If it was already recreated can be stopped with `make down` and started with `make up`. 
