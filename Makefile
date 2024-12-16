@@ -33,10 +33,10 @@ recreate: build external-net up migrate
 down: # Stop containers
 	$(COMPOSE_CMD) down
 
+.PHONY: test
+test:
+	$(COMPOSE_CMD) run --rm summarization-server sh -c "pytest /opt/darmaai/src/tests/jobs/test_api.py"
+
 .PHONY: logs
 logs:
 	$(COMPOSE_CMD) logs -f
-
-.PHONY: test
-test:
-	$(COMPOSE_CMD) run --rm summarization-server sh -c "pytest /opt/darmaai/src/tests"
