@@ -1,0 +1,49 @@
+x-service:
+  &base-service
+  build:
+    context: .
+    dockerfile: Dockerfile
+    args:
+      APP_ENV: 'local'
+  networks:
+    - summarization-net
+    - service-grp-net
+  env_file:
+    - .env.local
+  volumes:
+    - ./:/opt/darmaai/
+
+
+services:
+  summarization-server:
+    <<: *base-service
+    ports:
+      - "8000:8000"
+    command: >
+      bash -c "python ./manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - task-broker-redis
+
+  task-broker-redis:
+    image: redis:7.4.1-alpine
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:5672"
+    networks:
+      - summarization-net
+      - service-grp-net
+
+  task-worker:
+    <<: *base-service
+    command: watchmedo auto-restart -p "*.py" -d /opt/darmaai/src/summarization/ -R -- celery -A summarization.task_queue.worker.app worker -l debug
+    depends_on:
+      - task-broker-redis
+
+networks:
+  summarization-net: {}
+  service-grp-net:
+    external: true
+
+volumes:
+  redis-data: {}

@@ -1,0 +1,8 @@
+celery
+celery[redis]
+django
+django-environ
+djangorestframework
+django-structlog[celery]
+google-generativeai
+structlog
