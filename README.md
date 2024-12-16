@@ -7,7 +7,24 @@
 - Run `make test`
 
 ### Rationale behind key technical decisions.
-- The tech stack I used was Django + SQLite because I use this framework more these days so I can lay out a project quickly. I didn't make the endpoint async but
+## Framework
+- The tech stack I used was Django + SQLite because I use this framework more these days so I can lay out a project quickly. Django offers way more features that are needed for this project but regardless Django covers the needs nicely.
+- FastAPI would have been a good option too.
+- I split the project in two Django apps: content_files and jobs. Those two fit well with the two main resources or domain models that the test talks about which are files submitted and summarized, and summarization jobs.
+- Based on those resources and the requirements of the test the endpoints exposed are:
+```
+- Submit file:
+/api/upload/
+- Retrieve job status:
+/api/jobs/<job_id>/status/ (although currently all fields of job are returned)
+- Retrieve summarized content:
+/api/jobs/<job_id>/summarized-content/
+- List all jobs:
+/api/jobs/
+```
+
+## Database
+- I went with SQLite because it's works pretty much out of the box with Django and no additional Docker container is needed. Just it useful to add sqlite tooling to access DB shell when debugging. Of course SQLite won't be a good option for DB in production.
 
 ### Build and run the Docker image.
 - The docker container is built and run using `make recreate`. If it was already recreated can be stopped with `make down` and started with `make up`. 
